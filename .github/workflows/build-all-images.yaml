@@ -1,0 +1,41 @@
+name: build-all-images
+
+on:
+  workflow_dispatch:
+
+jobs:
+  call-build-terminal:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "terminal"
+
+  call-build-websocket:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "websocket"
+
+  call-build-namespace:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "namespace"
+
+  call-build-networkpolicy:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "networkpolicy"
+
+  call-build-pod:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "pod"
+      
+  call-build-service:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "service"

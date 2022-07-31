@@ -1,0 +1,81 @@
+html,
+body,
+#k8stty {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+}
+
+.xterm-viewport {
+    scrollbar-width: none !important;
+    overflow-y: hidden;
+}
+
+#loadoverlay {
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#loadoverlay button {
+    box-shadow: 0px 3px 15px -5px rgba(0, 0, 0, 0.5);
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    font-size: 2rem;
+    padding: 1rem;
+    border-radius: 5px;
+    text-shadow: 2px 2px black;
+    border-top: 2px solid #eee;
+    border-bottom: 2px solid white;
+    border-left: 1px solid #eee;
+    border-right: 2px solid white;
+    cursor: pointer;
+}
+
+#loadoverlay.loading {
+    animation-name: loading;
+    animation-duration: 0.5s;
+    animation-timing-function: ease-in-out;
+    animation-direction: alternate;
+    animation-iteration-count: infinite;
+    animation-play-state: running;
+}
+
+@keyframes loading {
+    0% {
+        /* transform: rotate3d(1,1,1,3deg); */
+        transform: scale3d(1.02, 1.02, 1.02)
+    }
+
+    100% {
+        /* transform: rotate3d(0,0,0,0); */
+        transform: scale3d(1, 1, 1)
+    }
+}
+
+#loadoverlay.hidden {
+    animation-name: hideloader;
+    animation-duration: 1s;
+    animation-fill-mode: forwards;
+}
+
+@keyframes hideloader {
+    0% {
+        opacity: 1;
+    }
+
+    99% {
+        width: 100%;
+        height: 100%;
+    }
+
+    100% {
+        display: none;
+        opacity: 0;
+        height: 0;
+        width: 0;
+    }
+}

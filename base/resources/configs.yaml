@@ -1,0 +1,111 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: service-urls
+data:
+  namespace-host: 0.0.0.0:8081
+  network-host: 0.0.0.0:8082
+  pod-host: 0.0.0.0:8083
+  service-host: 0.0.0.0:8084
+  term-host: 0.0.0.0:9000
+  websocket-host: 0.0.0.0:9001
+  namespace-svc: namespace-svc:8081
+  pod-svc: pod-svc:8083
+  network-svc: network-svc:8082
+  service-svc: service-svc:8084
+  term-svc: term-svc:9000
+  websocket-svc: websocket-svc:9001
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-config
+data:
+  nginx.conf: |
+    upstream backend-attach {
+      server websocket-svc:9001;
+      keepalive 32;
+    }
+
+    upstream backend-terminal {
+      server term-svc:9000;
+      keepalive 32;
+    }
+
+    server {
+      listen 8080 default_server;
+      server_name _;
+      root /var/www/html;
+      index index.html;
+
+      location / {
+        sendfile off;
+        try_files $uri $uri/ @proxy;
+      }
+
+      location /api/v1/terminal/attach {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Frame-Options SAMEORIGIN;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_buffers 256 16k;
+        proxy_buffer_size 16k;
+        proxy_read_timeout 600s;
+        proxy_http_version 1.1;
+        proxy_pass http://backend-attach;
+      }
+
+      location @proxy {
+        proxy_set_header Host $http_host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Frame-Options SAMEORIGIN;
+        proxy_buffers 256 16k;
+        proxy_buffer_size 16k;
+        proxy_read_timeout 600s;
+        proxy_http_version 1.1;
+        proxy_pass http://backend-terminal;
+      }
+
+    }
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-url
+data:
+  url: https://index.docker.io/v1/k8stty/
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: allowed-images
+data:
+  images: |
+    alpine:3
+    busybox:stable
+    busybox:stable-musl
+    debian:bookworm
+    debian:bookworm-slim
+    python:bookworm
+    python:bullseye
+    ubuntu:focal
+    ubuntu:jammy
+
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: allowed-origins
+data:
+  origins: |
+    http://127.0.0.1:8080
+    http://localhost:8080

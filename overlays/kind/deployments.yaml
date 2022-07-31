@@ -1,0 +1,71 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: term-dep
+spec:
+  template:
+    spec:
+      containers:
+        - name: terminal
+          image: localhost:5001/terminal:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-dep
+spec:
+  template:
+    spec:
+      containers:
+        - name: websocket
+          image: localhost:5001/websocket:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: namespace-dep
+spec:
+  template:
+    spec:
+      containers:
+        - name: namespace
+          image: localhost:5001/namespace:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-dep
+spec:
+  template:
+    spec:
+      containers:
+        - name: network
+          image: localhost:5001/networkpolicy:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-dep
+spec:
+  template:
+    spec:
+      containers:
+        - name: pod
+          image: localhost:5001/pod:latest
+      
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-dep
+spec:
+  template:
+    spec:
+      containers:
+        - name: service
+          image: localhost:5001/service:latest

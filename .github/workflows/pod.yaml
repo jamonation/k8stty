@@ -1,0 +1,26 @@
+name: pod
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target binary'
+        required: true
+        type: choice
+        options:
+          - pod
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/cmd/pod/**'
+      - 'src/internal/pod/**'
+      - '!src/pkg/**'
+
+jobs:
+  call-build-image:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "pod"

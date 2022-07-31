@@ -1,0 +1,60 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: terminal
+          image: ko.local/terminal:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: websocket
+          image: ko.local/websocket:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: namespace
+          image: ko.local/namespace:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: network
+          image: ko.local/networkpolicy:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: pod
+          image: ko.local/pod:latest
+
+---
+apiVersion: apps/v1
+kind: Deployment
+spec:
+  template:
+    spec:
+      containers:
+        - name: service
+          image: ko.local/service:latest
+

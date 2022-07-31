@@ -1,0 +1,128 @@
+syntax = "proto3";
+package k8stty;
+
+option go_package = "k8stty/k8stty";
+
+service Ingress {
+  rpc CreateIngress(CreateIngressReq) returns (CreateIngressResp) {}
+  rpc DeleteIngress(DeleteIngressReq) returns (DeleteIngressResp) {}
+}
+
+service Namespace {
+  rpc CreateNamespace(CreateNamespaceReq) returns (CreateNamespaceResp) {}
+  rpc DeleteNamespace(DeleteNamespaceReq) returns (DeleteNamespaceResp) {}
+}
+
+service Networkpolicy {
+  rpc CreateNetworkpolicy(CreateNetworkpolicyReq) returns (CreateNetworkpolicyResp) {}
+  rpc DeleteNetworkpolicy(DeleteNetworkpolicyReq) returns (DeleteNetworkpolicyResp) {}
+}
+
+service Pod {
+  rpc CreatePod(CreatePodReq) returns (CreatePodResp) {}
+  rpc DeletePod(DeletePodReq) returns (DeletePodResp) {}
+}
+
+service Service {
+  rpc CreateService(CreateServiceReq) returns (CreateServiceResp) {}
+  rpc DeleteService(DeleteServiceReq) returns (DeleteServiceResp) {}
+}
+
+service CheckOrigin {
+  rpc Check(CheckOriginReq) returns (CheckOriginResp) {}
+}
+
+// ingresses
+message CreateIngressReq {
+  string ingressId = 1;
+}
+
+message CreateIngressResp {
+  bool success = 1;
+}
+
+message DeleteIngressReq {
+  string ingressId = 1;
+}
+
+message DeleteIngressResp {
+  bool success = 1;
+}
+
+// namespaces
+message CreateNamespaceReq {
+  string namespaceId = 1;
+}
+
+message CreateNamespaceResp {
+  bool success = 1;
+}
+
+message DeleteNamespaceReq {
+  string namespaceId = 1;
+}
+
+message DeleteNamespaceResp {
+  bool success = 1;
+}
+
+// networkpolicies
+message CreateNetworkpolicyReq {
+  string networkpolicyId = 1;
+}
+
+message CreateNetworkpolicyResp {
+  bool success = 1;
+}
+
+message DeleteNetworkpolicyReq {
+  string networkpolicyId = 1;
+}
+
+message DeleteNetworkpolicyResp {
+  bool success = 1;
+}
+
+// pods
+message CreatePodReq {
+  string podId = 1;
+  string imageName = 2;
+}
+
+message CreatePodResp {
+  bool success = 1;
+}
+
+message DeletePodReq {
+  string podId = 1;
+}
+
+message DeletePodResp {
+  bool success = 1;
+}
+
+// services
+message CreateServiceReq {
+  string serviceId = 1;
+}
+
+message CreateServiceResp {
+  bool success = 1;
+}
+
+message DeleteServiceReq {
+  string serviceId = 1;
+}
+
+message DeleteServiceResp {
+  bool success = 1;
+}
+
+// check origin
+message CheckOriginReq {
+  string origin = 1;
+}
+
+message CheckOriginResp {
+  bool success = 1;
+}

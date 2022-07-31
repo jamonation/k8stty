@@ -1,0 +1,26 @@
+name: namespace
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target binary'
+        required: true
+        type: choice
+        options:
+          - namespace
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/cmd/namespace/**'
+      - 'src/internal/namespace/**'
+      - '!src/pkg/**'
+
+jobs:
+  call-build-image:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "namespace"

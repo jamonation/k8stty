@@ -1,0 +1,26 @@
+name: websocket
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target binary'
+        required: true
+        type: choice
+        options:
+          - websocket
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/cmd/websocket/**'
+      - 'src/internal/websocket/**'
+      - '!src/pkg/**'
+
+jobs:
+  call-build-image:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "websocket"

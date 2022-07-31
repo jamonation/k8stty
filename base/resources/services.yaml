@@ -1,0 +1,111 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: term-svc
+  labels:
+    app: terminal
+spec:
+  selector:
+    app: terminal
+  ports:
+    - name: http2
+      protocol: TCP
+      port: 9000
+      targetPort: 9000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: namespace-svc
+  labels:
+    app: namespace
+spec:
+  selector:
+    app: namespace
+  ports:
+    - name: http2
+      protocol: TCP
+      port: 8081
+      targetPort: 8081
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: network-svc
+  labels:
+    app: network
+spec:
+  selector:
+    app: network
+  ports:
+    - name: http2
+      protocol: TCP
+      port: 8082
+      targetPort: 8082
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: pod-svc
+  labels:
+    app: pod
+spec:
+  selector:
+    app: pod
+  ports:
+    - name: http2
+      protocol: TCP
+      port: 8083
+      targetPort: 8083
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-svc
+  labels:
+    app: service
+spec:
+  selector:
+    app: service
+  ports:
+    - name: http2
+      protocol: TCP
+      port: 8084
+      targetPort: 8084
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: websocket-svc
+  labels:
+    app: websocket
+spec:
+  selector:
+    app: websocket
+  ports:
+    - name: http2
+      protocol: TCP
+      port: 9001
+      targetPort: 9001
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: nginx-svc
+  labels:
+    app: nginx
+spec:
+  selector:
+    app: nginx
+  ports:
+    - name: http2
+      protocol: TCP
+      port: 8080
+      targetPort: 8080

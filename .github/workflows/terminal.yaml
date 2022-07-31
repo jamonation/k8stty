@@ -1,0 +1,26 @@
+name: terminal
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target binary'
+        required: true
+        type: choice
+        options:
+          - terminal
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/cmd/terminal/**'
+      - 'src/internal/terminal/**'
+      - '!src/pkg/**'
+
+jobs:
+  call-build-image:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "terminal"

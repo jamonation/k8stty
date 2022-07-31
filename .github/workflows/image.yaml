@@ -1,0 +1,64 @@
+name: images
+
+on:
+  workflow_call:
+    inputs:
+      target:
+        required: true
+        type: string
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target binary'
+        required: true
+        type: choice
+        options:
+          - terminal
+          - websocket
+          - namespace
+          - networkpolicy
+          - pod
+          - service
+
+env:
+  COSIGN_EXPERIMENTAL: 1
+  KO_DOCKER_REPO: k8stty
+  
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: sigstore/cosign-installer@main
+      - uses: imjasonh/setup-ko@v0.4
+      
+      - uses: docker/login-action@v2.0.0
+        with:
+          username: k8stty
+          password: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          
+      - uses: docker/login-action@v1.9.0
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: ko build image
+        run: | 
+          cd "src/cmd/${{ inputs.target }}"
+          ko build --base-import-paths --sbom spdx --image-refs=/tmp/images.txt . 
+
+      - name: cosign sign
+        run: cosign sign $(cat /tmp/images.txt)
+  
+      - name: fetch sbom
+        run: cosign download sbom $(cat /tmp/images.txt) > "/tmp/${{ inputs.target }}".spdx
+        
+      - name: attest sbom
+        run: cosign attest --predicate "/tmp/${{ inputs.target }}".spdx $(cat /tmp/images.txt)
+

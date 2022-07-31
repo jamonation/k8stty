@@ -1,0 +1,26 @@
+name: service
+
+on:
+  workflow_call:
+  workflow_dispatch:
+    inputs:
+      target:
+        description: 'Target binary'
+        required: true
+        type: choice
+        options:
+          - service
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/cmd/service/**'
+      - 'src/internal/service/**'
+      - '!src/pkg/**'
+
+jobs:
+  call-build-image:
+    uses: ./.github/workflows/image.yaml
+    secrets: inherit
+    with:
+      target: "service"

@@ -1,0 +1,430 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: term-dep
+  labels:
+    app: terminal
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: terminal
+  template:
+    metadata:
+      labels:
+        app: terminal
+    spec:
+      securityContext:
+        runAsNonRoot: false
+      serviceAccount: default
+      containers:
+        - name: terminal
+          image: k8stty/terminal:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 9000
+          imagePullPolicy: Always
+          env:
+            - name: TERM_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: term-host
+            - name: NAMESPACE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: namespace-svc
+            - name: NETWORK_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: network-svc
+            - name: POD_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: pod-svc
+            - name: SERVICE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: service-svc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: websocket-dep
+  labels:
+    app: websocket
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: websocket
+  template:
+    metadata:
+      labels:
+        app: websocket
+    spec:
+      securityContext:
+        runAsNonRoot: false
+      serviceAccount: default
+      containers:
+        - name: websocket
+          image: k8stty/websocket:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 9001
+          imagePullPolicy: Always
+          env:
+            - name: WEBSOCKET_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: websocket-host
+            - name: NAMESPACE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: namespace-svc
+            - name: NETWORK_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: network-svc
+            - name: POD_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: pod-svc
+            - name: SERVICE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: service-svc
+            - name: WEBSOCKET_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: websocket-svc
+            - name: ALLOWED_ORIGINS
+              valueFrom:
+                configMapKeyRef:
+                  name: allowed-origins
+                  key: origins
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: namespace-dep
+  labels:
+    app: namespace
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: namespace
+  template:
+    metadata:
+      labels:
+        app: namespace
+    spec:
+      securityContext:
+        runAsNonRoot: false
+      serviceAccount: default
+      containers:
+        - name: namespace
+          image: k8stty/namespace:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 8081
+          imagePullPolicy: Always
+          env:
+            - name: NAMESPACE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: namespace-host
+            - name: NAMESPACE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: namespace-svc
+            - name: NETWORK_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: network-svc
+            - name: POD_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: pod-svc
+            - name: SERVICE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: service-svc
+            - name: WEBSOCKET_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: websocket-svc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: network-dep
+  labels:
+    app: network
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: network
+  template:
+    metadata:
+      labels:
+        app: network
+    spec:
+      securityContext:
+        runAsNonRoot: false
+      serviceAccount: default
+      containers:
+        - name: network
+          image: k8stty/networkpolicy:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 8081
+          imagePullPolicy: Always
+          env:
+            - name: NETWORK_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: network-host
+            - name: NAMESPACE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: namespace-svc
+            - name: NETWORK_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: network-svc
+            - name: POD_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: pod-svc
+            - name: SERVICE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: service-svc
+            - name: WEBSOCKET_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: websocket-svc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod-dep
+  labels:
+    app: pod
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod
+  template:
+    metadata:
+      labels:
+        app: pod
+    spec:
+      securityContext:
+        runAsNonRoot: false
+      serviceAccount: default
+      containers:
+        - name: pod
+          image: k8stty/pod:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 8081
+          imagePullPolicy: Always
+          env:
+            - name: POD_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: pod-host
+            - name: NAMESPACE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: namespace-svc
+            - name: NETWORK_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: network-svc
+            - name: POD_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: pod-svc
+            - name: SERVICE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: service-svc
+            - name: WEBSOCKET_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: websocket-svc
+            - name: REGISTRY_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: registry-url
+                  key: url
+            - name: ALLOWED_IMAGES
+              valueFrom:
+                configMapKeyRef:
+                  name: allowed-images
+                  key: images
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-dep
+  labels:
+    app: service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service
+  template:
+    metadata:
+      labels:
+        app: service
+    spec:
+      securityContext:
+        runAsNonRoot: false
+      serviceAccount: default
+      containers:
+        - name: service
+          image: k8stty/service:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 8081
+          imagePullPolicy: Always
+          env:
+            - name: SERVICE_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: service-host
+            - name: NAMESPACE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: namespace-svc
+            - name: NETWORK_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: network-svc
+            - name: POD_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: pod-svc
+            - name: SERVICE_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: service-svc
+            - name: WEBSOCKET_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: websocket-svc
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-dep
+  labels:
+    app: nginx
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: nginx
+  template:
+    metadata:
+      labels:
+        app: nginx
+    spec:
+      securityContext:
+        runAsNonRoot: false
+      serviceAccount: default
+      containers:
+        - name: nginx
+          image: nginx:latest
+          resources:
+            limits:
+              memory: "64Mi"
+              cpu: "250m"
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: IfNotPresent
+          volumeMounts:
+            - name: nginx-config-volume
+              mountPath: /etc/nginx/conf.d/
+          env:
+            - name: TERM_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: term-svc
+            - name: WEBSOCKET_SVC
+              valueFrom:
+                configMapKeyRef:
+                  name: service-urls
+                  key: websocket-svc
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: nginx-config

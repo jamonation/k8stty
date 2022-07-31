@@ -1,0 +1,7 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: registry-url
+data:
+  url: https://index.docker.io/v1/k8stty/
