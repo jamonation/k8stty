@@ -69,12 +69,12 @@ func TestCreatePod(t *testing.T) {
 		//TODO: need a test for an error from CreatePod
 	}
 
+	mockPodManager := newMockPodManager()
 	for _, tc := range testCases {
-		mockPodManager := newMockPodManager()
 		t.Run(tc.name, func(t *testing.T) {
 			ctx := context.Background()
-			PodService := pod.NewPodServer(mockPodManager, allowedImages, registryUrl)
-			resp, err := PodService.CreatePod(ctx, tc.req)
+			podService := pod.NewPodServer(mockPodManager, allowedImages, registryUrl)
+			resp, err := podService.CreatePod(ctx, tc.req)
 			if tc.expectErr {
 				if resp != tc.resp {
 					t.Error(err)

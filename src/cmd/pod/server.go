@@ -14,16 +14,14 @@ import (
 	"google.golang.org/grpc"
 )
 
-var allowedImages = make(map[string]struct{}) // this is a map of keys only, no values for quick look ups
-var registryURL string
-
-func init() {
-
-}
-
 func main() {
-	var ok bool
-	var images string
+	var (
+		allowedImages = make(map[string]struct{}) // this is a map of keys only, no values for quick look ups
+		images        string
+		ok            bool
+		registryURL   string
+	)
+
 	if registryURL, ok = os.LookupEnv("REGISTRY_URL"); !ok {
 		log.Fatalf("missing REGISTRY_URL environment variable")
 	}
