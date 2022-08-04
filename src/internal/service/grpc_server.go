@@ -6,15 +6,17 @@ import (
 	"log"
 
 	pb "k8stty/internal/pkg/grpcs"
+	"k8stty/internal/pkg/objectmanager"
 )
 
 type serviceServerImpl struct {
+	manager objectmanager.Manager
 	pb.UnimplementedServiceServer
 }
 
 // NewServiceServer returns the server API for pods
-func NewServiceServer() pb.ServiceServer {
-	return &serviceServerImpl{}
+func NewServiceServer(serviceManager objectmanager.Manager) pb.ServiceServer {
+	return &serviceServerImpl{manager: serviceManager}
 }
 
 func (n *serviceServerImpl) CreateService(ctx context.Context, req *pb.CreateServiceReq) (*pb.CreateServiceResp, error) {

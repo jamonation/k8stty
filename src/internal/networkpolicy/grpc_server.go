@@ -5,31 +5,18 @@ import (
 	"fmt"
 	"log"
 
-	"k8stty/internal/pkg/clientset"
 	pb "k8stty/internal/pkg/grpcs"
 	"k8stty/internal/pkg/objectmanager"
 )
 
-var k8sClient clientset.K8sClient
-var networkpolicyManager objectmanager.Manager
-
-func init() {
-	if err := k8sClient.Configure(); err != nil {
-		log.Fatalf("error getting k8s config: %v\n", err)
-	}
-	if err := k8sClient.BuildClientSet(); err != nil {
-		log.Fatalf("error building k8s clientset: %v\n", err)
-	}
-	networkpolicyManager = objectmanager.NewNetworkpolicyManager(k8sClient)
-}
-
 type networkpolicyServerImpl struct {
+	manager objectmanager.Manager
 	pb.UnimplementedNetworkpolicyServer
 }
 
 // NewNetworkpolicyServer returns the server API for network policies
-func NewNetworkpolicyServer() pb.NetworkpolicyServer {
-	return &networkpolicyServerImpl{}
+func NewNetworkpolicyServer(networkpolicyManager objectmanager.Manager) pb.NetworkpolicyServer {
+	return &networkpolicyServerImpl{manager: networkpolicyManager}
 }
 
 func (n *networkpolicyServerImpl) CreateNetworkpolicy(ctx context.Context, req *pb.CreateNetworkpolicyReq) (*pb.CreateNetworkpolicyResp, error) {
@@ -41,7 +28,7 @@ func (n *networkpolicyServerImpl) CreateNetworkpolicy(ctx context.Context, req *
 	reqOpts := map[string]string{"id": req.NetworkpolicyId}
 	// TODO: add a configMap with Proto/Port combinations and pass as a reqOpts parameter
 
-	if err := networkpolicyManager.Create(ctx, reqOpts); err != nil {
+	if err := n.manager.Create(ctx, reqOpts); err != nil {
 		log.Println(err)
 		return &pb.CreateNetworkpolicyResp{
 			Success: false}, err
