@@ -31,7 +31,7 @@ func main() {
 	if err := k8sClient.BuildClientSet(); err != nil {
 		log.Fatalf("error building k8s clientset: %v\n", err)
 	}
-	namespaceManager := objectmanager.NewPodManager(k8sClient)
+	namespaceManager := objectmanager.NewNamespaceManager(k8sClient)
 	server := namespace.NewNamespaceServer(namespaceManager)
 
 	s := grpc.NewServer()

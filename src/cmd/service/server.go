@@ -1,10 +1,10 @@
 package main
 
 import (
-	"k8stty/internal/networkpolicy"
 	"k8stty/internal/pkg/clientset"
 	pb "k8stty/internal/pkg/grpcs"
 	"k8stty/internal/pkg/objectmanager"
+	"k8stty/internal/service"
 	"os"
 
 	"log"
@@ -32,7 +32,7 @@ func main() {
 		log.Fatalf("error building k8s clientset: %v\n", err)
 	}
 	serviceManager := objectmanager.NewServiceManager(k8sClient)
-	server := networkpolicy.NewServiceManager(serviceManager)
+	server := service.NewServiceServer(serviceManager)
 
 	s := grpc.NewServer()
 	s.RegisterService(&pb.Service_ServiceDesc, server)
