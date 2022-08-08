@@ -1,0 +1,8 @@
+name = "k8stty"
+region = "us-central1"
+zones = ["us-central1-a", "us-central1-f"]
+project_id = "example-project-id"
+min_nodes = "1"
+max_nodes = "10"
+machine_type = "n1-standard-2"
+compute_engine_service_account = "some-service-account-id@developer.gserviceaccount.com"
