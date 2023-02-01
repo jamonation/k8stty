@@ -88,6 +88,12 @@ func (c *GrpcConn) AttachTerm(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	log.Printf("URL: %v\n", r.URL.String())
+	command := r.URL.Query().Get("command")
+	if command == "" {
+		command = "/bin/bash"
+	}
+
 	id := strings.Replace(r.URL.Path, "/api/v1/terminal/attach/", "", -1)
 	if id == "" {
 		m.Msg.Error = "missing id"
@@ -103,12 +109,6 @@ func (c *GrpcConn) AttachTerm(w http.ResponseWriter, r *http.Request) {
 		log.Printf("deleted namespace: %s\n", id)
 	}()
 
-	var command []string
-	if !r.URL.Query().Has("command") {
-		command = []string{"/bin/sh"}
-	} else {
-		command = []string{"/bin/bash"}
-	}
 	log.Printf("Received attach request: %s - command: %s\n", id, command)
 
 	upgrader := &websocket.Upgrader{
@@ -141,7 +141,7 @@ func (c *GrpcConn) AttachTerm(w http.ResponseWriter, r *http.Request) {
 		Stderr:    true,
 		TTY:       true,
 		Container: id,
-		Command:   command,
+		Command:   []string{command},
 	}
 
 	execReq := k8sClient.Clientset.CoreV1().RESTClient().Post().

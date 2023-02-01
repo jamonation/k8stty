@@ -20,7 +20,7 @@ func NewNamespaceServer(namespaceManager objectmanager.Manager) pb.NamespaceServ
 }
 
 func (n *namespaceServerImpl) CreateNamespace(ctx context.Context, req *pb.CreateNamespaceReq) (*pb.CreateNamespaceResp, error) {
-	fmt.Printf("received create namespace request: %v\n", req)
+	log.Printf("received create namespace request: %v\n", req)
 	if req.NamespaceId == "" {
 		return nil, fmt.Errorf("missing create namespace request id")
 	}
@@ -37,7 +37,7 @@ func (n *namespaceServerImpl) CreateNamespace(ctx context.Context, req *pb.Creat
 }
 
 func (n *namespaceServerImpl) DeleteNamespace(ctx context.Context, req *pb.DeleteNamespaceReq) (*pb.DeleteNamespaceResp, error) {
-	fmt.Printf("received delete namespace request: %v\n", req)
+	log.Printf("received delete namespace request: %v\n", req)
 	if req.NamespaceId == "" {
 		return nil, fmt.Errorf("missing delete namespace request id")
 	}
