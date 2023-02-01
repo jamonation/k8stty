@@ -2,6 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: term-dep
   labels:
     app: terminal
@@ -59,6 +60,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: websocket-dep
   labels:
     app: websocket
@@ -126,6 +128,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: namespace-dep
   labels:
     app: namespace
@@ -188,6 +191,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: network-dep
   labels:
     app: network
@@ -250,6 +254,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: pod-dep
   labels:
     app: pod
@@ -322,6 +327,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: service-dep
   labels:
     app: service
@@ -384,6 +390,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: nginx-dep
   labels:
     app: nginx
