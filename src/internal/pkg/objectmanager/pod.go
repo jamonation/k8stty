@@ -6,6 +6,7 @@ import (
 	"log"
 
 	corev1 "k8s.io/api/core/v1"
+	"k8s.io/apimachinery/pkg/api/resource"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/watch"
 
@@ -26,31 +27,51 @@ func (k *podManager) Create(ctx context.Context, reqInfo map[string]string) erro
 	// presence of these is checked in PodServer.CreatePod() before this function is called
 	id := reqInfo["id"]
 	image := reqInfo["image"]
+        runtimeClass := "sysbox-runc"
 
-	// this is the init (pid 1) command. An attached websocket command will be something else with pid > 1
-	// TODO: configure this to allow running systemd as init
-	command := []string{"/bin/bash"}
-
+	// pods use sysbox as their runtime, so need the io.kubernetes.cri-o.userns-mode annotation
+	// along with the RuntimeClassName set to sysbox-runc
 	pod := &corev1.Pod{
 		ObjectMeta: metav1.ObjectMeta{
 			Name: id,
+			Annotations: map[string]string{
+				"io.kubernetes.cri-o.userns-mode": "auto:size=65536",
+			},
 		},
-		// TODO: actually fill out the spec
 		Spec: corev1.PodSpec{
+			// HostAliases are used to override the kube-dns resolver response of 169.254.169.254
+			// For some reason 169.254.169.254 doesn't seem directly reachable from pods
+			HostAliases: []corev1.HostAlias{
+				{
+					IP:        "10.254.4.10",
+					Hostnames: []string{"metadata.google.internal", "metadata"},
+				},
+			},
 			Containers: []corev1.Container{
 				{
 					Name:    id,
 					Image:   image,
 					Stdin:   true,
-					Command: command,
+					ImagePullPolicy: "Always",
+					Resources: corev1.ResourceRequirements{
+						Limits: corev1.ResourceList{
+							"memory": resource.MustParse("600M"),
+						},
+					},
 				},
 			},
 			AutomountServiceAccountToken: &false, // Don't expose account token in /var/run
 			EnableServiceLinks:           &false, // Don't expose env variables
 			ServiceAccountName:           "default",
-			Hostname:                     id[:8],
+			Hostname:                     id[:8], //use first 8 characters of ID as name
+			RuntimeClassName:             &runtimeClass,
+			DNSPolicy:                    "None",
+			DNSConfig: &corev1.PodDNSConfig{
+				Nameservers: []string{"8.8.8.8", "8.8.4.4"},
+			},
 		},
 	}
+
 	opts := metav1.CreateOptions{}
 	pod, err := k.Client.Clientset.CoreV1().Pods(id).Create(ctx, pod, opts)
 	if err != nil {

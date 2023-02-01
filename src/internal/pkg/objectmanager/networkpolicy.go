@@ -24,12 +24,17 @@ func (k *networkpolicyManager) Create(ctx context.Context, reqInfo map[string]st
 	id := reqInfo["id"]
 	tcp := v1.ProtocolTCP
 	udp := v1.ProtocolUDP
+	ssh := intstr.IntOrString{IntVal: 22}
 	dns := intstr.IntOrString{IntVal: 53}
 	http := intstr.IntOrString{IntVal: 80}
 	https := intstr.IntOrString{IntVal: 443}
 	httpAlt := intstr.IntOrString{IntVal: 8080}
 
 	allowedPorts := []netv1.NetworkPolicyPort{
+		{
+			Protocol: &tcp,
+			Port:     &ssh,
+		},
 		{
 			Protocol: &tcp,
 			Port:     &http,
@@ -49,6 +54,19 @@ func (k *networkpolicyManager) Create(ctx context.Context, reqInfo map[string]st
 		{
 			Protocol: &udp,
 			Port:     &dns,
+		},
+	}
+
+	allowedIPs := []netv1.NetworkPolicyPeer{
+		{
+			IPBlock: &netv1.IPBlock{
+				CIDR: "0.0.0.0/0",
+				Except: []string{
+					"10.0.0.0/8",
+					"172.16.0.0/12",
+					"192.168.0.0/16",
+				},
+			},
 		},
 	}
 
@@ -72,6 +90,7 @@ func (k *networkpolicyManager) Create(ctx context.Context, reqInfo map[string]st
 			Egress: []netv1.NetworkPolicyEgressRule{
 				{
 					Ports: allowedPorts,
+					To:    allowedIPs,
 				},
 			},
 			PolicyTypes: []netv1.PolicyType{"Egress"},
@@ -82,7 +101,7 @@ func (k *networkpolicyManager) Create(ctx context.Context, reqInfo map[string]st
 	if _, err := k.Client.Clientset.NetworkingV1().NetworkPolicies(id).Create(ctx, defaultDenyPolicy, opts); err != nil {
 		return fmt.Errorf("error creating network policy: %v", err)
 	}
-	log.Printf("creating allowPolicy\n")
+	log.Printf("creating allowPolicy\n%v\n", allowPolicy)
 	if _, err := k.Client.Clientset.NetworkingV1().NetworkPolicies(id).Create(ctx, allowPolicy, opts); err != nil {
 		return fmt.Errorf("error creating network policy: %v", err)
 	}

@@ -65,6 +65,7 @@ func (h *GrpcConns) Init() error {
 // CreateTerm contains the logic to connect to gRPC services and create objects.
 func (h *GrpcConns) CreateTerm(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
+	w.Header().Set("Content-Security-Policy", "frame-ancestors 'none';")
 	m := msgWrapper{}
 
 	if r.Header.Get("Content-Type") != "application/json" {

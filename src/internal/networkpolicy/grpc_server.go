@@ -20,7 +20,7 @@ func NewNetworkpolicyServer(networkpolicyManager objectmanager.Manager) pb.Netwo
 }
 
 func (n *networkpolicyServerImpl) CreateNetworkpolicy(ctx context.Context, req *pb.CreateNetworkpolicyReq) (*pb.CreateNetworkpolicyResp, error) {
-	fmt.Printf("received create networkpolicy request: %v\n", req)
+	log.Printf("received create networkpolicy request: %v\n", req)
 	if req.NetworkpolicyId == "" {
 		return nil, fmt.Errorf("missing request id")
 	}

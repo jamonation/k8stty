@@ -74,7 +74,7 @@ async function attachTerminal() {
         ws_protocol = 'ws';
     }
 
-    let command = new URLSearchParams(location.search).get("command") || "/bin/sh";
+    let command = new URLSearchParams(location.search).get("command") || "/bin/bash";
 
     let ws = new WebSocket(
         `${ws_protocol}://${window.location.host}/api/v1/terminal/attach/${terminal_id}?command=${command}`);

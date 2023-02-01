@@ -2,6 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: term-dep
 spec:
   template:
@@ -14,6 +15,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: websocket-dep
 spec:
   template:
@@ -26,6 +28,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: namespace-dep
 spec:
   template:
@@ -38,6 +41,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: network-dep
 spec:
   template:
@@ -50,6 +54,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: pod-dep
 spec:
   template:
@@ -62,6 +67,7 @@ spec:
 apiVersion: apps/v1
 kind: Deployment
 metadata:
+  namespace: k8stty
   name: service-dep
 spec:
   template:

@@ -3,6 +3,8 @@ package objectmanager
 import (
 	"context"
 	"fmt"
+	"log"
+	"time"
 
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
@@ -30,6 +32,19 @@ func (k *namespaceManager) Create(ctx context.Context, reqOpts map[string]string
 	if _, err := k.Client.Clientset.CoreV1().Namespaces().Create(ctx, ns, opts); err != nil {
 		return fmt.Errorf("error creating namespace: %v", err)
 	}
+
+	go func() {
+		log.Printf("started delete goroutine for %s", id)
+		time.Sleep(3601 * time.Second)
+		ctx := context.Background()
+		err := k.Delete(ctx, id)
+		//probably don't need to log this e.g. if a client disconnected gracefully
+		// there's no namespace to be deleted since the websocket cleanup handles it
+		if err != nil {
+			log.Printf("%v\n", err)
+		}
+	}()
+
 	return nil
 }
 
@@ -44,5 +59,6 @@ func (k *namespaceManager) Delete(ctx context.Context, id string) error {
 	if err := k.Client.Clientset.CoreV1().Namespaces().Delete(ctx, id, opts); err != nil {
 		return fmt.Errorf("error deleting namespace: %v", err)
 	}
+	log.Printf("deleted namespace %s\n", id)
 	return nil
 }

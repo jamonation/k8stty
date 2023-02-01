@@ -16,7 +16,7 @@ const (
 	writeWait = 10 * time.Second
 
 	// Time allowed to read the next pong message from the peer.
-	pongWait = 60 * time.Second
+	pongWait = 3600 * time.Second
 
 	// Send pings to peer with this period. Must be less than pongWait.
 	pingWait = (pongWait * 9) / 10
@@ -50,6 +50,8 @@ type controlMessage struct {
 
 // Run reads from client (this runs in a goroutine)
 func (w *WS) Run() {
+	// w.conn.SetReadDeadline(time.Now().Add(pongWait))
+	// w.conn.SetPongHandler(func(string) error { w.conn.SetReadDeadline(time.Now().Add(pongWait)); return nil })
 	for {
 		messageType, r, err := w.conn.ReadMessage()
 		if err != nil {

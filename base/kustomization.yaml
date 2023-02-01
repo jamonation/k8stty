@@ -1,8 +1,22 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: k8stty
+
 resources:
+  - resources/namespaces.yaml
   - resources/services.yaml
   - resources/deployments.yaml
   - resources/configs.yaml
   - resources/clusterroles.yaml
   - resources/clusterrolebindings.yaml
+
+generatorOptions:
+ disableNameSuffixHash: true
+
+configMapGenerator:
+  - name: service-urls
+    envs:
+      - .env
+  - name: nginx-config
+    files:
+      - nginx.conf

@@ -10,7 +10,7 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: default
-    namespace: default
+    namespace: k8stty
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -24,7 +24,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: default
+  namespace: k8stty
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -38,7 +38,7 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: default
+  namespace: k8stty
 
 ---
 apiVersion: rbac.authorization.k8s.io/v1
@@ -52,4 +52,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: default
-  namespace: default
+  namespace: k8stty
